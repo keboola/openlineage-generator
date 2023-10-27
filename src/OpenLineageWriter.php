@@ -21,6 +21,7 @@ class OpenLineageWriter
         private string $openLineageEndpoint,
         private bool $jobNameAsConfig = false,
         private bool $includeEventSchemaUrl = false,
+        private ?string $dateFormat = null,
     ) {
     }
 
@@ -42,9 +43,15 @@ class OpenLineageWriter
                 if ($this->includeEventSchemaUrl) {
                     $event['schemaURL'] = 'https://openlineage.io/spec/1-0-2/OpenLineage.json#/$defs/RunEvent';
                 }
+
                 if ($this->jobNameAsConfig) {
                     $event['job']['name'] = sprintf('%s-%s', $job['component'], $job['config']);
                 }
+
+                if ($this->dateFormat) {
+                    $event['eventTime'] = (new DateTimeImmutable($event['eventTime']))->format($this->dateFormat);
+                }
+
                 $this->logger->info(sprintf('- Sending %s event', $event['eventType']));
 
                 try {
