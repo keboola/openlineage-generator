@@ -79,7 +79,7 @@ class OpenLineageWriter
         $response = $this->queueClient->request(
             'GET',
             sprintf(
-                '/jobs?%s',
+                '/search/jobs?%s',
                 http_build_query([
                     'createdTimeFrom' => $this->createdTimeFrom->format('c'),
                     'sortOrder' => 'desc',
